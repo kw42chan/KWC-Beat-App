@@ -1,5 +1,7 @@
 import {Zone} from '../types/zone';
 import {Profile} from '../types/profile';
+// Import default zones that will be bundled with the app
+import defaultZonesData from '../data/default-zones.json';
 
 const DB_NAME = 'kwc-beat-app';
 const DB_VERSION = 2; // Incremented for profile support
@@ -181,14 +183,67 @@ export async function loadZonesFromDB(profileId?: string): Promise<Zone[] | null
     });
     
     db.close();
+    
+    // If no zones found and this is the default profile, load default zones
+    if (!zones && currentProfileId === 'default') {
+      console.log('[ZoneStorage] No zones found, loading default zones');
+      const defaultZones = (defaultZonesData as Zone[]).map(zone => ({
+        ...zone,
+        visible: zone.visible !== undefined ? zone.visible : true,
+        locked: zone.locked !== undefined ? zone.locked : false,
+      }));
+      
+      // Save default zones to storage for future use
+      try {
+        await saveZonesToDB(defaultZones, currentProfileId);
+        console.log(`[ZoneStorage] Loaded and saved ${defaultZones.length} default zones`);
+      } catch (saveError) {
+        console.warn('[ZoneStorage] Failed to save default zones, returning them anyway:', saveError);
+      }
+      
+      return defaultZones;
+    }
+    
     return zones;
   } catch (error) {
     console.error('Failed to load zones from IndexedDB:', error);
     // Fallback to localStorage
     try {
       const savedZones = localStorage.getItem(`kwc-beat-zones-${currentProfileId}`);
-      return savedZones ? JSON.parse(savedZones) : null;
+      if (savedZones) {
+        return JSON.parse(savedZones);
+      }
+      
+      // If no saved zones and this is default profile, return default zones
+      if (currentProfileId === 'default') {
+        console.log('[ZoneStorage] No zones in localStorage, loading default zones');
+        const defaultZones = (defaultZonesData as Zone[]).map(zone => ({
+          ...zone,
+          visible: zone.visible !== undefined ? zone.visible : true,
+          locked: zone.locked !== undefined ? zone.locked : false,
+        }));
+        
+        // Try to save to localStorage
+        try {
+          localStorage.setItem(`kwc-beat-zones-${currentProfileId}`, JSON.stringify(defaultZones));
+        } catch (saveError) {
+          console.warn('[ZoneStorage] Failed to save default zones to localStorage:', saveError);
+        }
+        
+        return defaultZones;
+      }
+      
+      return null;
     } catch {
+      // If all else fails and this is default profile, return default zones
+      if (currentProfileId === 'default') {
+        console.log('[ZoneStorage] All storage methods failed, returning default zones');
+        return (defaultZonesData as Zone[]).map(zone => ({
+          ...zone,
+          visible: zone.visible !== undefined ? zone.visible : true,
+          locked: zone.locked !== undefined ? zone.locked : false,
+        }));
+      }
       return null;
     }
   }
