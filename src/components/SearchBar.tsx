@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState, ChangeEvent} from 'react';
 import {useTheme} from '../context/ThemeContext';
 import './SearchBar.css';
 
@@ -12,7 +12,7 @@ export function SearchBar({onSearch, onClear, placeholder = 'Search zones...'}: 
   const {isDarkMode} = useTheme();
   const [query, setQuery] = useState('');
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value;
     setQuery(text);
     onSearch(text);

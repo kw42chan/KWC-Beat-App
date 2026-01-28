@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, useCallback} from 'react';
+import {useState, useEffect, useRef, useCallback} from 'react';
 import {GoogleMap, Polygon, Marker, useJsApiLoader, DrawingManager} from '@react-google-maps/api';
 import {Zone} from '../types/zone';
 import {useTheme} from '../context/ThemeContext';
@@ -728,7 +728,7 @@ export function MapScreen() {
             const strokeColor = color.replace(/,\s*[\d.]+\)$/, ', 1.0)');
 
           return (
-            <React.Fragment key={zone.id}>
+            <div key={zone.id}>
               <Polygon
                 key={`zone-${zone.id}-${zone.color || 'auto'}-${isDarkMode}-${isEditing ? 'editing' : 'normal'}`}
                 paths={zone.coordinates}
@@ -906,7 +906,7 @@ export function MapScreen() {
                   </div>
                 </div>
               )}
-            </React.Fragment>
+            </div>
           );
         })}
       </GoogleMap>

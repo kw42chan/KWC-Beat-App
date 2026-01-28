@@ -1,4 +1,4 @@
-import React from 'react';
+import {ChangeEvent} from 'react';
 import {useTheme} from '../context/ThemeContext';
 import './ColorPicker.css';
 
@@ -65,7 +65,7 @@ export function ColorPicker({selectedColor, onColorSelect}: ColorPickerProps) {
     return '#007aff';
   };
 
-  const handleCustomColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCustomColorChange = (e: ChangeEvent<HTMLInputElement>) => {
     const hex = e.target.value;
     // Convert hex to rgba
     const r = parseInt(hex.slice(1, 3), 16);

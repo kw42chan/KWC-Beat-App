@@ -1,11 +1,38 @@
 # Deployment Guide - KWC Beat App
 
-This guide covers deploying the frontend to GitHub Pages and options for backend hosting.
+This guide covers deploying the frontend to various platforms and options for backend hosting.
 
 ## Table of Contents
-1. [Frontend Deployment (GitHub Pages)](#frontend-deployment-github-pages)
+1. [Frontend Deployment Options](#frontend-deployment-options)
+   - [Vercel (Recommended)](#vercel-recommended)
+   - [GitHub Pages](#github-pages)
 2. [Backend Deployment Options](#backend-deployment-options)
 3. [Full Stack Deployment](#full-stack-deployment)
+
+---
+
+## Frontend Deployment Options
+
+### Vercel (Recommended) ⭐
+
+**Best for:** Production apps, automatic deployments, easy environment variable management
+
+**Quick Start:**
+1. Push code to GitHub
+2. Import project in Vercel dashboard
+3. Set environment variables (see [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md))
+4. Deploy!
+
+**📖 Full Guide:** See [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md) for complete instructions.
+
+**Key Features:**
+- ✅ Free hosting with HTTPS
+- ✅ Automatic deployments on git push
+- ✅ Easy environment variable configuration
+- ✅ Global CDN
+- ✅ Preview deployments for pull requests
+
+### GitHub Pages
 
 ---
 

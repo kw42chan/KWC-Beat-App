@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import {useState, useRef, ChangeEvent} from 'react';
 import {Zone} from '../types/zone';
 import {useTheme} from '../context/ThemeContext';
 import {loadZonesFromFile} from '../utils/zoneStorage';
@@ -37,7 +37,7 @@ export function ImportModal({visible, onClose, onImport, existingZoneCount}: Imp
     );
   };
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 

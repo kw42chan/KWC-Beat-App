@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import {Zone} from '../types/zone';
 import {useTheme} from '../context/ThemeContext';
 import {ColorPicker} from './ColorPicker';

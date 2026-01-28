@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Zone} from '../types/zone';
 import {useTheme} from '../context/ThemeContext';
 import './ZoneList.css';
