@@ -1,0 +1,104 @@
+.color-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.color-picker-presets {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+
+.color-picker-swatch {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.color-picker-swatch:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.color-picker-swatch.selected {
+  border-color: #007aff;
+  border-width: 3px;
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.3);
+}
+
+.color-picker-swatch.dark.selected {
+  border-color: #0a84ff;
+  box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.3);
+}
+
+.color-picker-custom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.color-picker-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+}
+
+.color-picker-label.dark {
+  color: #fff;
+}
+
+.color-picker-input {
+  width: 50px;
+  height: 40px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+  transition: all 0.2s;
+}
+
+.color-picker-input.custom-selected {
+  border-color: #007aff;
+  border-width: 3px;
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.3);
+}
+
+.color-picker-input.dark.custom-selected {
+  border-color: #0a84ff;
+  box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.3);
+}
+
+.color-picker-input:hover {
+  transform: scale(1.05);
+}
+
+.color-picker-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.color-picker-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 6px;
+}
+
+.color-picker-custom-indicator {
+  color: #007aff;
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: 4px;
+}
+
+.color-picker-label.dark .color-picker-custom-indicator {
+  color: #0a84ff;
+}

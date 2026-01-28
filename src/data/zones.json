@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "name": "Zone 1",
+    "minLat": 22.3500,
+    "maxLat": 22.3600,
+    "minLng": 114.1200,
+    "maxLng": 114.1300,
+    "centerLat": 22.3550,
+    "centerLng": 114.1250
+  },
+  {
+    "id": 2,
+    "name": "Zone 2",
+    "minLat": 22.3600,
+    "maxLat": 22.3700,
+    "minLng": 114.1200,
+    "maxLng": 114.1300,
+    "centerLat": 22.3650,
+    "centerLng": 114.1250
+  },
+  {
+    "id": 3,
+    "name": "Zone 3",
+    "minLat": 22.3500,
+    "maxLat": 22.3600,
+    "minLng": 114.1300,
+    "maxLng": 114.1400,
+    "centerLat": 22.3550,
+    "centerLng": 114.1350
+  },
+  {
+    "id": 4,
+    "name": "Zone 4",
+    "minLat": 22.3600,
+    "maxLat": 22.3700,
+    "minLng": 114.1300,
+    "maxLng": 114.1400,
+    "centerLat": 22.3650,
+    "centerLng": 114.1350
+  },
+  {
+    "id": 5,
+    "name": "Zone 5",
+    "minLat": 22.3400,
+    "maxLat": 22.3500,
+    "minLng": 114.1200,
+    "maxLng": 114.1300,
+    "centerLat": 22.3450,
+    "centerLng": 114.1250
+  }
+]

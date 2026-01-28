@@ -1,0 +1,318 @@
+.profile-selector {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1001;
+  display: inline-block;
+}
+
+.profile-selector-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #ffffff;
+  border: 2px solid #007aff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #007aff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.2s, box-shadow 0.2s;
+  position: relative;
+  white-space: nowrap;
+}
+
+.profile-selector-button:hover {
+  background-color: #f0f8ff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.profile-selector.dark .profile-selector-button {
+  background-color: #1c1c1e;
+  border-color: #0a84ff;
+  color: #0a84ff;
+}
+
+.profile-selector.dark .profile-selector-button:hover {
+  background-color: #2c2c2e;
+}
+
+.profile-icon {
+  font-size: 16px;
+}
+
+.profile-name {
+  min-width: 120px;
+  text-align: left;
+}
+
+.storage-indicator {
+  font-size: 14px;
+  margin: 0 4px;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.storage-indicator.server {
+  color: #4caf50;
+}
+
+.storage-indicator.local {
+  color: #ff9800;
+}
+
+.profile-selector-button:hover .storage-indicator {
+  opacity: 1;
+}
+
+.profile-arrow {
+  font-size: 10px;
+  transition: transform 0.2s;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px;
+  max-height: 400px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  margin-top: 2px;
+}
+
+.profile-selector.dark .profile-dropdown {
+  background-color: #1c1c1e;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.profile-list {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.profile-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.profile-list::-webkit-scrollbar-track {
+  background: #f2f2f7;
+  border-radius: 4px;
+}
+
+.profile-selector.dark .profile-list::-webkit-scrollbar-track {
+  background: #2c2c2e;
+}
+
+.profile-list::-webkit-scrollbar-thumb {
+  background: #c7c7cc;
+  border-radius: 4px;
+}
+
+.profile-selector.dark .profile-list::-webkit-scrollbar-thumb {
+  background: #48484a;
+}
+
+.profile-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.profile-item:hover {
+  background-color: #f2f2f7;
+}
+
+.profile-item.active {
+  background-color: #e3f2fd;
+  border: 1px solid #007aff;
+}
+
+.profile-selector.dark .profile-item:hover {
+  background-color: #2c2c2e;
+}
+
+.profile-selector.dark .profile-item.active {
+  background-color: #1a2e4a;
+  border-color: #0a84ff;
+}
+
+.profile-item-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.profile-item-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #000000;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-selector.dark .profile-item-name {
+  color: #ffffff;
+}
+
+.profile-item-count {
+  font-size: 12px;
+  color: #8e8e93;
+}
+
+.profile-item-actions {
+  display: flex;
+  gap: 4px;
+  margin-left: 8px;
+}
+
+.profile-action-button {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid #e5e5ea;
+  background-color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.profile-action-button:hover {
+  background-color: #f2f2f7;
+  border-color: #007aff;
+}
+
+.profile-action-button.danger:hover {
+  border-color: #ff3b30;
+  background-color: #fff5f5;
+}
+
+.profile-selector.dark .profile-action-button {
+  background-color: #2c2c2e;
+  border-color: #38383a;
+}
+
+.profile-selector.dark .profile-action-button:hover {
+  background-color: #38383a;
+  border-color: #0a84ff;
+}
+
+.profile-selector.dark .profile-action-button.danger:hover {
+  border-color: #ff453a;
+  background-color: #2a1a1a;
+}
+
+.profile-edit,
+.profile-create {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  width: 100%;
+}
+
+.profile-edit-input,
+.profile-create-input {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid #e5e5ea;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.profile-selector.dark .profile-edit-input,
+.profile-selector.dark .profile-create-input {
+  background-color: #2c2c2e;
+  border-color: #38383a;
+  color: #ffffff;
+}
+
+.profile-edit-save,
+.profile-edit-cancel,
+.profile-create-save,
+.profile-create-cancel {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid #e5e5ea;
+  background-color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.profile-edit-save:hover,
+.profile-create-save:hover {
+  background-color: #e8f5e9;
+  border-color: #4caf50;
+}
+
+.profile-edit-cancel:hover,
+.profile-create-cancel:hover {
+  background-color: #ffebee;
+  border-color: #f44336;
+}
+
+.profile-selector.dark .profile-edit-save,
+.profile-selector.dark .profile-edit-cancel,
+.profile-selector.dark .profile-create-save,
+.profile-selector.dark .profile-create-cancel {
+  background-color: #2c2c2e;
+  border-color: #38383a;
+}
+
+.profile-create-button {
+  width: 100%;
+  padding: 10px;
+  margin: 8px;
+  border: 2px dashed #007aff;
+  border-radius: 8px;
+  background-color: #f0f8ff;
+  color: #007aff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.profile-create-button:hover {
+  background-color: #e3f2fd;
+  border-color: #0051d5;
+}
+
+.profile-selector.dark .profile-create-button {
+  background-color: #1a2e4a;
+  border-color: #0a84ff;
+  color: #0a84ff;
+}
+
+.profile-selector.dark .profile-create-button:hover {
+  background-color: #2a3e5a;
+}

@@ -1,0 +1,72 @@
+.zoom-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  z-index: 1000;
+}
+
+.zoom-button {
+  background-color: #ffffff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.zoom-button:hover {
+  transform: scale(1.05);
+}
+
+.zoom-button.dark {
+  background-color: #1c1c1e;
+}
+
+.zoom-button-text {
+  color: #007aff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.zoom-button-text.dark {
+  color: #0a84ff;
+}
+
+.zoom-icon-button {
+  background-color: #ffffff;
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.zoom-icon-button:hover {
+  transform: scale(1.05);
+}
+
+.zoom-icon-button.dark {
+  background-color: #1c1c1e;
+}
+
+.zoom-icon-text {
+  font-size: 24px;
+  color: #007aff;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.zoom-icon-text.dark {
+  color: #0a84ff;
+}

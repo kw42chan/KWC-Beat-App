@@ -1,0 +1,51 @@
+.drawing-controls {
+  position: absolute;
+  top: 60px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 1000;
+}
+
+.drawing-button {
+  background-color: #ffffff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #007aff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.drawing-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.drawing-button.dark {
+  background-color: #1c1c1e;
+  color: #0a84ff;
+}
+
+.drawing-button.danger {
+  color: #ff3b30;
+}
+
+.drawing-button.dark.danger {
+  color: #ff453a;
+}
+
+.drawing-button.cancel {
+  color: #ff3b30;
+  background-color: #fff5f5;
+}
+
+.drawing-button.dark.cancel {
+  color: #ff453a;
+  background-color: #2a1a1a;
+}
