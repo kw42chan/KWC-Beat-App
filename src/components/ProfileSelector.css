@@ -321,21 +321,21 @@
 @media (max-width: 768px) {
   .profile-selector {
     top: 10px;
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
+    left: auto;
+    right: 10px;
+    transform: none;
   }
 
   .profile-selector-button {
-    padding: 6px 12px;
-    font-size: 13px;
+    padding: 6px 10px;
+    font-size: 12px;
     min-width: auto;
     border-radius: 6px;
   }
 
   .profile-name {
-    min-width: 60px;
-    max-width: 100px;
+    min-width: 50px;
+    max-width: 80px;
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -346,10 +346,10 @@
   }
 
   .profile-dropdown {
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-    width: 260px;
+    left: auto;
+    right: 0;
+    transform: none;
+    width: 240px;
   }
 }
 
@@ -357,9 +357,9 @@
 @media (max-width: 380px) {
   .profile-selector {
     top: 10px;
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
+    left: auto;
+    right: 8px;
+    transform: none;
   }
 
   .profile-selector-button {

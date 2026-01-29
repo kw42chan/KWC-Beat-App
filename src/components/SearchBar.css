@@ -75,9 +75,9 @@
   .search-bar {
     left: 10px;
     right: auto;
-    max-width: 160px;
+    max-width: 140px;
     border-radius: 22px;
-    padding: 0 14px;
+    padding: 0 12px;
   }
 
   .search-input {
@@ -98,8 +98,8 @@
 @media (max-width: 380px) {
   .search-bar {
     left: 8px;
-    max-width: calc(100% - 120px);
-    padding: 0 12px;
+    max-width: 120px;
+    padding: 0 10px;
   }
 
   .search-input {
