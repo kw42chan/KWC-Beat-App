@@ -305,7 +305,7 @@
 /* Small mobile screens */
 @media (max-width: 380px) {
   .map-style-toggle {
-    bottom: 75px;
+    top: 100px;
     right: 8px;
     gap: 6px;
   }

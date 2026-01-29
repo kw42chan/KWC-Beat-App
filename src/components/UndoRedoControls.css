@@ -36,19 +36,21 @@
   color: #0a84ff;
 }
 
-/* Mobile Responsive - Move to top right, next to profile selector */
+/* Mobile Responsive - Move to bottom right */
 @media (max-width: 768px) {
   .undo-redo-controls {
-    top: 60px;
+    top: auto;
     left: auto;
-    right: 140px;
+    right: 10px;
+    bottom: 20px;
+    flex-direction: row;
     gap: 6px;
   }
 
   .undo-redo-button {
-    padding: 6px 10px;
-    font-size: 12px;
-    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 11px;
+    border-radius: 16px;
     min-width: 50px;
   }
 }
@@ -56,16 +58,15 @@
 /* Small mobile screens */
 @media (max-width: 380px) {
   .undo-redo-controls {
-    top: 100px;
+    bottom: 16px;
     right: 8px;
-    left: auto;
     gap: 4px;
   }
 
   .undo-redo-button {
-    padding: 5px 8px;
+    padding: 6px 10px;
     min-width: 45px;
-    font-size: 11px;
-    border-radius: 5px;
+    font-size: 10px;
+    border-radius: 14px;
   }
 }
