@@ -307,17 +307,17 @@ export function MapScreen() {
   }, []);
 
   useEffect(() => {
-    // Filter zones based on search query
+    // Filter zones based on search query - exact match only
     if (!searchQuery.trim()) {
       setFilteredZones(zones);
       return;
     }
 
-    const query = searchQuery.toLowerCase();
+    const query = searchQuery.toLowerCase().trim();
     const filtered = zones.filter(
       zone =>
-        zone.id.toString().includes(query) ||
-        zone.name.toLowerCase().includes(query),
+        zone.id.toString() === query ||
+        zone.name.toLowerCase() === query,
     );
     setFilteredZones(filtered);
 
@@ -1072,7 +1072,7 @@ export function MapScreen() {
       <SearchBar
         onSearch={handleSearch}
         onClear={handleClearSearch}
-        placeholder="Search zones by ID or name..."
+        placeholder="Exact match (ID or name)"
       />
 
       <DrawingControls

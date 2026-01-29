@@ -75,7 +75,7 @@
   .search-bar {
     left: 10px;
     right: auto;
-    max-width: calc(100% - 140px);
+    max-width: 160px;
     border-radius: 22px;
     padding: 0 14px;
   }
