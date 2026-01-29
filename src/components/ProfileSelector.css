@@ -320,10 +320,10 @@
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .profile-selector {
-    top: 60px;
-    left: auto;
-    right: 10px;
-    transform: none;
+    top: 10px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
   }
 
   .profile-selector-button {
@@ -346,9 +346,9 @@
   }
 
   .profile-dropdown {
-    left: auto;
-    right: 0;
-    transform: none;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
     width: 260px;
   }
 }
@@ -356,8 +356,10 @@
 /* Small mobile screens */
 @media (max-width: 380px) {
   .profile-selector {
-    top: 60px;
-    right: 8px;
+    top: 10px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
   }
 
   .profile-selector-button {
