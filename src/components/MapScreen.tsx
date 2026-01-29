@@ -826,6 +826,7 @@ export function MapScreen() {
           streetViewControl: false,
           mapTypeControl: true,
           fullscreenControl: true,
+          gestureHandling: 'cooperative',
           styles: mapStyle === 'dark'
             ? [
                 {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
