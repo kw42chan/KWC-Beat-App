@@ -316,3 +316,65 @@
 .profile-selector.dark .profile-create-button:hover {
   background-color: #2a3e5a;
 }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .profile-selector {
+    top: 60px;
+    left: auto;
+    right: 10px;
+    transform: none;
+  }
+
+  .profile-selector-button {
+    padding: 6px 12px;
+    font-size: 13px;
+    min-width: auto;
+    border-radius: 6px;
+  }
+
+  .profile-name {
+    min-width: 60px;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .storage-indicator,
+  .profile-arrow {
+    display: none;
+  }
+
+  .profile-dropdown {
+    left: auto;
+    right: 0;
+    transform: none;
+    width: 260px;
+  }
+}
+
+/* Small mobile screens */
+@media (max-width: 380px) {
+  .profile-selector {
+    top: 60px;
+    right: 8px;
+  }
+
+  .profile-selector-button {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  .profile-name {
+    min-width: 50px;
+    max-width: 80px;
+  }
+
+  .profile-icon {
+    font-size: 14px;
+  }
+
+  .profile-dropdown {
+    width: 240px;
+  }
+}

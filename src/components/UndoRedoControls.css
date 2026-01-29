@@ -35,3 +35,37 @@
   background-color: #1c1c1e;
   color: #0a84ff;
 }
+
+/* Mobile Responsive - Move to top right, next to profile selector */
+@media (max-width: 768px) {
+  .undo-redo-controls {
+    top: 60px;
+    left: auto;
+    right: 140px;
+    gap: 6px;
+  }
+
+  .undo-redo-button {
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 6px;
+    min-width: 50px;
+  }
+}
+
+/* Small mobile screens */
+@media (max-width: 380px) {
+  .undo-redo-controls {
+    top: 100px;
+    right: 8px;
+    left: auto;
+    gap: 4px;
+  }
+
+  .undo-redo-button {
+    padding: 5px 8px;
+    min-width: 45px;
+    font-size: 11px;
+    border-radius: 5px;
+  }
+}

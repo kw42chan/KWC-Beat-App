@@ -6,17 +6,21 @@
   flex-direction: column;
   align-items: flex-end;
   z-index: 1000;
+  gap: 8px;
 }
 
 .zoom-button {
   background-color: #ffffff;
   padding: 10px 16px;
   border-radius: 8px;
-  margin-bottom: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   border: none;
   cursor: pointer;
   transition: transform 0.1s;
+  font-size: 14px;
+  font-weight: 600;
+  color: #007aff;
+  white-space: nowrap;
 }
 
 .zoom-button:hover {
@@ -25,15 +29,6 @@
 
 .zoom-button.dark {
   background-color: #1c1c1e;
-}
-
-.zoom-button-text {
-  color: #007aff;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.zoom-button-text.dark {
   color: #0a84ff;
 }
 
@@ -45,11 +40,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   border: none;
   cursor: pointer;
   transition: transform 0.1s;
+  font-size: 24px;
+  font-weight: bold;
+  color: #007aff;
 }
 
 .zoom-icon-button:hover {
@@ -58,15 +55,68 @@
 
 .zoom-icon-button.dark {
   background-color: #1c1c1e;
+  color: #0a84ff;
 }
 
 .zoom-icon-text {
-  font-size: 24px;
-  color: #007aff;
-  font-weight: bold;
   line-height: 1;
+  margin-top: -2px;
 }
 
-.zoom-icon-text.dark {
-  color: #0a84ff;
+/* Mobile Responsive - Horizontal layout at bottom center */
+@media (max-width: 768px) {
+  .zoom-controls {
+    bottom: 20px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .zoom-button {
+    margin-bottom: 0;
+    padding: 10px 18px;
+    font-size: 13px;
+    border-radius: 20px;
+    order: 3;
+  }
+
+  .zoom-icon-button {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 0;
+    border-radius: 22px;
+    font-size: 24px;
+  }
+
+  .zoom-icon-button.zoom-in {
+    order: 2;
+  }
+
+  .zoom-icon-button.zoom-out {
+    order: 1;
+  }
+}
+
+/* Small mobile screens */
+@media (max-width: 380px) {
+  .zoom-controls {
+    bottom: 16px;
+    gap: 10px;
+  }
+
+  .zoom-button {
+    padding: 8px 14px;
+    font-size: 12px;
+    border-radius: 18px;
+  }
+
+  .zoom-icon-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    font-size: 22px;
+  }
 }

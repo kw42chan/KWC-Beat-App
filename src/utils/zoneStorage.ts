@@ -184,6 +184,19 @@ export async function loadZonesFromDB(profileId?: string): Promise<Zone[] | null
     
     db.close();
     
+    // If no zones in IndexedDB, try localStorage fallback
+    if (!zones) {
+      try {
+        const savedZones = localStorage.getItem(`kwc-beat-zones-${currentProfileId}`);
+        if (savedZones) {
+          console.log(`[ZoneStorage] Found zones in localStorage for profile ${currentProfileId}`);
+          return JSON.parse(savedZones);
+        }
+      } catch (e) {
+        console.warn('[ZoneStorage] Failed to load from localStorage:', e);
+      }
+    }
+    
     // If no zones found and this is the default profile, load default zones
     if (!zones && currentProfileId === 'default') {
       console.log('[ZoneStorage] No zones found, loading default zones');
@@ -202,6 +215,12 @@ export async function loadZonesFromDB(profileId?: string): Promise<Zone[] | null
       }
       
       return defaultZones;
+    }
+    
+    // For non-default profiles, return empty array instead of null if no zones found
+    // This prevents undefined behavior in the UI
+    if (!zones) {
+      return [];
     }
     
     return zones;

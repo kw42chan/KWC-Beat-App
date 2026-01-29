@@ -4,13 +4,16 @@
  */
 
 import {ThemeProvider} from './context/ThemeContext';
+import {AuthProvider} from './context/AuthContext';
 import {MapScreen} from './components/MapScreen';
 import './App.css';
 
 function App() {
   return (
     <ThemeProvider>
-      <MapScreen />
+      <AuthProvider>
+        <MapScreen />
+      </AuthProvider>
     </ThemeProvider>
   );
 }

@@ -20,6 +20,9 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transition: all 0.2s;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .drawing-button:hover {
@@ -48,4 +51,37 @@
 .drawing-button.dark.cancel {
   color: #ff453a;
   background-color: #2a1a1a;
+}
+
+/* Mobile Responsive - Move to top left, below search bar */
+@media (max-width: 768px) {
+  .drawing-controls {
+    top: 110px;
+    left: 10px;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .drawing-button {
+    padding: 8px 12px;
+    font-size: 12px;
+    border-radius: 8px;
+    min-width: 100px;
+    justify-content: flex-start;
+  }
+}
+
+/* Small mobile screens */
+@media (max-width: 380px) {
+  .drawing-controls {
+    top: 100px;
+    left: 8px;
+    gap: 4px;
+  }
+
+  .drawing-button {
+    padding: 6px 10px;
+    min-width: 90px;
+    font-size: 11px;
+  }
 }

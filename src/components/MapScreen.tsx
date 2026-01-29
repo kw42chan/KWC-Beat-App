@@ -2,7 +2,8 @@ import {useState, useEffect, useRef, useCallback} from 'react';
 import {GoogleMap, Polygon, Marker, useJsApiLoader, DrawingManager} from '@react-google-maps/api';
 import {Zone} from '../types/zone';
 import {useTheme} from '../context/ThemeContext';
-import {generateZoneColor, getAllZonesBounds, createZoneFromPolygon} from '../utils/zoneUtils';
+import {useAuth} from '../context/AuthContext';
+import {generateZoneColor, getAllZonesBounds, createZoneFromPolygon, resetColorCache} from '../utils/zoneUtils';
 import {SearchBar} from './SearchBar';
 import {ZoomControls} from './ZoomControls';
 import {ZoneDetailsModal} from './ZoneDetailsModal';
@@ -13,6 +14,7 @@ import {ImportModal} from './ImportModal';
 import {UndoRedoControls} from './UndoRedoControls';
 import {ZoneList} from './ZoneList';
 import {ProfileSelector} from './ProfileSelector';
+import {PasswordModal} from './PasswordModal';
 import {createHistoryState, addToHistory, undo, redo, canUndo, canRedo, HistoryState} from '../utils/zoneHistory';
 import {saveZonesToDB, loadZonesFromDB, exportZonesToFile, getCurrentProfileId} from '../utils/zoneStorage';
 import './MapScreen.css';
@@ -34,6 +36,8 @@ const GOOGLE_MAPS_LIBRARIES: ('drawing')[] = ['drawing'];
 
 export function MapScreen() {
   const {isDarkMode} = useTheme();
+  const {requireAuth, pendingFeature, login, clearPendingFeature} = useAuth();
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const mapRef = useRef<google.maps.Map | null>(null);
   const [zones, setZones] = useState<Zone[]>([]);
   const [filteredZones, setFilteredZones] = useState<Zone[]>([]);
@@ -49,11 +53,13 @@ export function MapScreen() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [editingZoneId, setEditingZoneId] = useState<number | null>(null);
   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
-  const [historyState, setHistoryState] = useState<HistoryState | null>(null);
+  const [historyState, setHistoryState] = useState<HistoryState | null>(createHistoryState([]));
   const [hoveredZone, setHoveredZone] = useState<Zone | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState<{x: number; y: number} | null>(null);
   const [originalZoneCoordinates, setOriginalZoneCoordinates] = useState<Map<number, Array<{lat: number; lng: number}>>>(new Map());
   const [currentProfileId, setCurrentProfileId] = useState<string>(getCurrentProfileId());
+  const [zonesLoadedAt, setZonesLoadedAt] = useState<number>(0);
+  const [mapReady, setMapReady] = useState<boolean>(false);
   const drawingManagerRef = useRef<google.maps.drawing.DrawingManager | null>(null);
   const polygonRefs = useRef<Map<number, google.maps.Polygon>>(new Map());
   const isInitialLoadRef = useRef<boolean>(true);
@@ -66,23 +72,35 @@ export function MapScreen() {
   });
 
   const loadZonesForProfile = async (profileId: string) => {
+    // Prevent concurrent loads for the same profile
+    if (isLoading && hasLoadedZonesRef.current) {
+      console.log('[MapScreen] Already loading zones, skipping duplicate request');
+      return;
+    }
+    
     try {
       setIsLoading(true);
       setError(null); // Clear any previous errors
       isInitialLoadRef.current = true;
+      hasLoadedZonesRef.current = false; // Reset load flag
       const loadedZones = await loadZonesFromDB(profileId);
       
       if (loadedZones && loadedZones.length > 0) {
+        console.log(`[MapScreen] Loaded ${loadedZones.length} zones for profile ${profileId}`);
+        // Reset color cache for new zones
+        resetColorCache();
         // Ensure zones have default values for new fields
         const normalizedZones = loadedZones.map(zone => ({
           ...zone,
           visible: zone.visible !== undefined ? zone.visible : true,
           locked: zone.locked !== undefined ? zone.locked : false,
         }));
+        console.log(`[MapScreen] Setting zones and filteredZones with ${normalizedZones.length} zones`);
         setZones(normalizedZones);
         setFilteredZones(normalizedZones);
         setHistoryState(createHistoryState(normalizedZones));
         hasLoadedZonesRef.current = true;
+        setZonesLoadedAt(Date.now()); // Force polygon re-render
 
         // Calculate initial center and zoom
         if (normalizedZones.length > 0) {
@@ -102,6 +120,7 @@ export function MapScreen() {
         setFilteredZones([]);
         setHistoryState(createHistoryState([]));
         hasLoadedZonesRef.current = true;
+        setZonesLoadedAt(Date.now()); // Force polygon re-render even for empty
         
         // Update profile zone count to 0 (don't block on this)
         const {updateProfile} = await import('../utils/zoneStorage');
@@ -121,6 +140,7 @@ export function MapScreen() {
       setFilteredZones([]);
       setHistoryState(createHistoryState([]));
       hasLoadedZonesRef.current = true;
+      setZonesLoadedAt(Date.now()); // Force polygon re-render even on error
       setIsLoading(false);
       // Mark initial load as complete
       setTimeout(() => {
@@ -133,6 +153,7 @@ export function MapScreen() {
     }
   };
 
+  // Initial load effect - runs once on mount and when profile changes
   useEffect(() => {
     // Load zones for current profile
     loadZonesForProfile(currentProfileId);
@@ -142,9 +163,16 @@ export function MapScreen() {
       if (isLoading) {
         console.warn('Loading timeout - forcing app to show');
         setIsLoading(false);
-        setZones([]);
-        setFilteredZones([]);
-        setHistoryState(createHistoryState([]));
+        // Don't clear zones on timeout - they might still be loading
+        // Just stop showing the loading spinner
+        if (!hasLoadedZonesRef.current) {
+          // Only set empty state if we truly haven't loaded anything
+          setZones([]);
+          setFilteredZones([]);
+          setHistoryState(createHistoryState([]));
+          hasLoadedZonesRef.current = true;
+          isInitialLoadRef.current = false;
+        }
       }
     }, 10000); // 10 second timeout
 
@@ -155,15 +183,41 @@ export function MapScreen() {
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 
-    // Keyboard shortcuts will be set up after handleUndo/handleRedo are defined
-
     return () => {
       clearTimeout(loadingTimeout);
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentProfileId]);
 
+  // Visibility change handler - reload zones when tab becomes visible
+  // This uses a ref to avoid recreating the handler on every render
+  const shouldReloadOnVisibleRef = useRef(false);
+  
+  useEffect(() => {
+    // Only enable reload after initial load is complete
+    if (hasLoadedZonesRef.current && !isLoading && !isDrawing && editingZoneId === null && !isModalVisible) {
+      shouldReloadOnVisibleRef.current = true;
+    } else {
+      shouldReloadOnVisibleRef.current = false;
+    }
+  }, [isLoading, isDrawing, editingZoneId, isModalVisible]);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && shouldReloadOnVisibleRef.current) {
+        console.log('[MapScreen] Window visible, reloading zones...');
+        loadZonesForProfile(currentProfileId);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentProfileId]);
 
   // Save zones to IndexedDB whenever zones change (persists across browsers on same origin)
   // BUT: Don't save during initial load to avoid overwriting backend data with empty array
@@ -173,10 +227,16 @@ export function MapScreen() {
       return;
     }
     
+    // Skip if we're in the middle of loading
+    if (isLoading) {
+      return;
+    }
+    
     // Only save if zones actually changed (not just initial empty state)
+    // Also don't save empty zones if we haven't explicitly cleared them
     if (zones.length === 0) {
-      // Don't save empty array - let backend keep its data
-      // Only clear local storage fallback
+      // Check if we previously had zones - if so, this might be an error state
+      // Don't clear storage in that case
       localStorage.removeItem(`kwc-beat-zones-${currentProfileId}`);
       return;
     }
@@ -185,7 +245,7 @@ export function MapScreen() {
     saveZonesToDB(zones, currentProfileId).catch(err => {
       console.error('Failed to save zones:', err);
     });
-  }, [zones, currentProfileId]);
+  }, [zones, currentProfileId, isLoading]);
 
   const handleProfileChange = (profileId: string) => {
     setCurrentProfileId(profileId);
@@ -195,6 +255,10 @@ export function MapScreen() {
 
   // Helper function to update zones and history
   const updateZones = useCallback((newZones: Zone[]) => {
+    // Reset color cache if zone count changed significantly
+    if (Math.abs(newZones.length - zones.length) > 1) {
+      resetColorCache();
+    }
     setZones(newZones);
     setFilteredZones(newZones);
     setHistoryState(prevState => {
@@ -203,7 +267,7 @@ export function MapScreen() {
       }
       return addToHistory(prevState, newZones);
     });
-  }, []);
+  }, [zones.length]);
 
   const handleZoomToZone = useCallback((zone: Zone) => {
     if (!mapRef.current) return;
@@ -294,6 +358,24 @@ export function MapScreen() {
     mapRef.current.fitBounds(bounds);
   }, [zones]);
 
+  const handleZoomIn = useCallback(() => {
+    if (mapRef.current) {
+      const currentZoom = mapRef.current.getZoom();
+      if (currentZoom !== undefined) {
+        mapRef.current.setZoom(currentZoom + 1);
+      }
+    }
+  }, []);
+
+  const handleZoomOut = useCallback(() => {
+    if (mapRef.current) {
+      const currentZoom = mapRef.current.getZoom();
+      if (currentZoom !== undefined) {
+        mapRef.current.setZoom(currentZoom - 1);
+      }
+    }
+  }, []);
+
 
   const handleRetry = () => {
     setIsLoading(true);
@@ -370,6 +452,7 @@ export function MapScreen() {
 
   const handleClearAll = () => {
     if (window.confirm('Are you sure you want to delete all zones? This cannot be undone.')) {
+      resetColorCache();
       updateZones([]);
     }
   };
@@ -397,6 +480,51 @@ export function MapScreen() {
       polygon.setMap(null);
       polygonRefs.current.delete(zoneId);
     }
+  };
+
+  // Protected handlers that require authentication
+  const handleProtectedStartDrawing = () => {
+    requireAuth('Draw Zone', handleStartDrawing);
+  };
+
+  const handleProtectedExport = async () => {
+    requireAuth('Export Zones', handleExport);
+  };
+
+  const handleProtectedImport = () => {
+    requireAuth('Import Zones', () => setIsImportModalVisible(true));
+  };
+
+  const handleProtectedEditBoundary = (zoneId: number) => {
+    requireAuth('Edit Zone Boundary', () => handleEditBoundary(zoneId));
+  };
+
+  const handleProtectedDeleteZone = (zoneId: number) => {
+    requireAuth('Delete Zone', () => handleDeleteZone(zoneId));
+  };
+
+  const handleProtectedUpdateZone = (updatedZone: Zone) => {
+    requireAuth('Update Zone', () => handleUpdateZone(updatedZone));
+  };
+
+  const handleProtectedClearAll = () => {
+    requireAuth('Clear All Zones', handleClearAll);
+  };
+
+  // Handle pending feature authentication
+  useEffect(() => {
+    if (pendingFeature) {
+      setIsPasswordModalOpen(true);
+    }
+  }, [pendingFeature]);
+
+  const handlePasswordSuccess = () => {
+    login();
+    if (pendingFeature) {
+      pendingFeature.callback();
+      clearPendingFeature();
+    }
+    setIsPasswordModalOpen(false);
   };
 
   const handleUpdateZone = (updatedZone: Zone) => {
@@ -436,6 +564,7 @@ export function MapScreen() {
 
   const handleImport = async (importedZones: Zone[]) => {
     if (importedZones.length === 0) return;
+    resetColorCache(); // Reset colors for new zones
     updateZones(importedZones);
     
     // Update profile zone count after import
@@ -600,7 +729,7 @@ export function MapScreen() {
       if (polygon) {
         const isCurrentlyEditing = editingZoneId === zone.id;
         if (!isCurrentlyEditing) {
-          const color = generateZoneColor(zone, isDarkMode);
+          const color = generateZoneColor(zone, isDarkMode, zones);
           const strokeColor = color.replace(/,\s*[\d.]+\)$/, ', 1.0)');
           polygon.setOptions({
             fillColor: color,
@@ -611,13 +740,30 @@ export function MapScreen() {
     });
   }, [zones, isDarkMode, editingZoneId]);
 
+  // Effect to force polygon rendering when zones are first loaded
+  // This fixes a bug where polygons don't appear initially
+  useEffect(() => {
+    if (zones.length > 0 && !isLoading && hasLoadedZonesRef.current && mapReady) {
+      console.log(`[MapScreen] Zones loaded: ${zones.length}, forcing polygon re-render`);
+      // Force Polygon components to re-mount by updating the timestamp
+      setZonesLoadedAt(Date.now());
+    }
+  }, [zones.length, isLoading, mapReady]);
+
   const onMapLoad = useCallback((map: google.maps.Map) => {
     mapRef.current = map;
+    console.log('[MapScreen] Map loaded, zones count:', zones.length);
     // Always fit bounds when map loads (will center on Kowloon if no zones)
     setTimeout(() => {
       handleFitAllZones();
     }, 500);
-  }, [handleFitAllZones]);
+    // Mark map as ready and force re-render
+    setTimeout(() => {
+      console.log('[MapScreen] Map ready, triggering polygon render');
+      setMapReady(true);
+      setZonesLoadedAt(Date.now());
+    }, 600);
+  }, [handleFitAllZones, zones.length]);
 
   // Update map style when mapStyle changes (must be before conditional returns)
   useEffect(() => {
@@ -715,10 +861,18 @@ export function MapScreen() {
           />
         )}
 
-        {filteredZones
+        {/* Only render polygons when map is fully loaded and zones are ready */}
+        {(() => {
+          const visibleZones = filteredZones.filter(z => z.visible !== false);
+          if (visibleZones.length > 0) {
+            console.log(`[MapScreen] Rendering ${visibleZones.length} polygons on map (mapReady: ${mapReady}, isLoaded: ${isLoaded})`);
+          }
+          return null;
+        })()}
+        {isLoaded && mapReady && filteredZones
           .filter(zone => zone.visible !== false)
           .map(zone => {
-            const color = generateZoneColor(zone, isDarkMode);
+            const color = generateZoneColor(zone, isDarkMode, zones);
             const isHighlighted = searchQuery.trim() && filteredZones.includes(zone);
             const isEditing = editingZoneId === zone.id;
             const fillOpacity = isHighlighted ? 0.5 : isEditing ? 0.4 : 0.3;
@@ -728,9 +882,9 @@ export function MapScreen() {
             const strokeColor = color.replace(/,\s*[\d.]+\)$/, ', 1.0)');
 
           return (
-            <div key={zone.id}>
+            <div key={`zone-wrapper-${zone.id}-${zonesLoadedAt}`}>
               <Polygon
-                key={`zone-${zone.id}-${zone.color || 'auto'}-${isDarkMode}-${isEditing ? 'editing' : 'normal'}`}
+                key={`zone-${zone.id}-${zone.color || 'auto'}-${isDarkMode}-${isEditing ? 'editing' : 'normal'}-${zonesLoadedAt}`}
                 paths={zone.coordinates}
                 options={{
                   fillColor: color,
@@ -749,6 +903,7 @@ export function MapScreen() {
                   }
                 }}
                 onLoad={(polygon) => {
+                  console.log(`[MapScreen] Polygon loaded for zone ${zone.id}`);
                   polygonRefs.current.set(zone.id, polygon);
                   
                   // Ensure editable state matches current editing state
@@ -921,11 +1076,11 @@ export function MapScreen() {
 
       <DrawingControls
         isDrawing={isDrawing}
-        onStartDrawing={handleStartDrawing}
+        onStartDrawing={handleProtectedStartDrawing}
         onCancelDrawing={handleCancelDrawing}
-        onClearAll={handleClearAll}
-        onExport={handleExport}
-        onImport={() => setIsImportModalVisible(true)}
+        onClearAll={handleProtectedClearAll}
+        onExport={handleProtectedExport}
+        onImport={handleProtectedImport}
       />
 
       {historyState && (
@@ -944,7 +1099,7 @@ export function MapScreen() {
         existingZoneCount={zones.length}
       />
 
-      <ZoomControls onFitAll={handleFitAllZones} />
+      <ZoomControls onFitAll={handleFitAllZones} onZoomIn={handleZoomIn} onZoomOut={handleZoomOut} />
 
       <ZoneList
         zones={zones}
@@ -1004,11 +1159,18 @@ export function MapScreen() {
             setEditingZoneId(null);
           }
         }}
-        onDelete={handleDeleteZone}
-        onUpdate={handleUpdateZone}
-        onEditBoundary={handleEditBoundary}
+        onDelete={handleProtectedDeleteZone}
+        onUpdate={handleProtectedUpdateZone}
+        onEditBoundary={handleProtectedEditBoundary}
         onDuplicate={handleDuplicateZone}
         onToggleVisibility={handleToggleVisibility}
+      />
+
+      <PasswordModal
+        isOpen={isPasswordModalOpen}
+        onClose={() => setIsPasswordModalOpen(false)}
+        onSuccess={handlePasswordSuccess}
+        feature={pendingFeature?.name || 'Admin Features'}
       />
     </div>
   );

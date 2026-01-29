@@ -12,30 +12,33 @@ export function ZoomControls({onFitAll, onZoomIn, onZoomOut}: ZoomControlsProps)
 
   return (
     <div className="zoom-controls">
-      <button
-        className={`zoom-button ${isDarkMode ? 'dark' : ''}`}
-        onClick={onFitAll}
-        type="button">
-        <span className={`zoom-button-text ${isDarkMode ? 'dark' : ''}`}>
-          Fit All Zones
-        </span>
-      </button>
       {onZoomIn && (
         <button
-          className={`zoom-icon-button ${isDarkMode ? 'dark' : ''}`}
+          className={`zoom-icon-button zoom-in ${isDarkMode ? 'dark' : ''}`}
           onClick={onZoomIn}
-          type="button">
+          type="button"
+          title="Zoom In">
           <span className={`zoom-icon-text ${isDarkMode ? 'dark' : ''}`}>+</span>
         </button>
       )}
       {onZoomOut && (
         <button
-          className={`zoom-icon-button ${isDarkMode ? 'dark' : ''}`}
+          className={`zoom-icon-button zoom-out ${isDarkMode ? 'dark' : ''}`}
           onClick={onZoomOut}
-          type="button">
+          type="button"
+          title="Zoom Out">
           <span className={`zoom-icon-text ${isDarkMode ? 'dark' : ''}`}>−</span>
         </button>
       )}
+      <button
+        className={`zoom-button ${isDarkMode ? 'dark' : ''}`}
+        onClick={onFitAll}
+        type="button"
+        title="Fit All Zones">
+        <span className={`zoom-button-text ${isDarkMode ? 'dark' : ''}`}>
+          Fit All
+        </span>
+      </button>
     </div>
   );
 }

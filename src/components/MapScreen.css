@@ -2,6 +2,7 @@
   width: 100%;
   height: 100vh;
   position: relative;
+  overflow: hidden;
 }
 
 .offline-banner {
@@ -241,4 +242,100 @@
 
 .zone-tooltip.dark .zone-tooltip-content::after {
   border-top-color: #1c1c1e;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .map-style-toggle {
+    top: auto;
+    bottom: 80px;
+    right: 10px;
+    flex-direction: column;
+  }
+
+  .map-style-button {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    border-radius: 20px;
+  }
+
+  .editing-indicator {
+    top: 110px;
+    left: 10px;
+    right: 10px;
+  }
+
+  .editing-badge {
+    min-width: auto;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+  }
+
+  .editing-actions {
+    flex-direction: row;
+    gap: 6px;
+  }
+
+  .editing-save-button,
+  .editing-cancel-button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .offline-banner {
+    top: 110px;
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .zone-tooltip-content {
+    max-width: 200px;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .zone-tooltip-name {
+    font-size: 14px;
+  }
+}
+
+/* Small mobile screens */
+@media (max-width: 380px) {
+  .map-style-toggle {
+    bottom: 75px;
+    right: 8px;
+    gap: 6px;
+  }
+
+  .map-style-button {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+    border-radius: 18px;
+  }
+
+  .editing-indicator {
+    top: 100px;
+    left: 8px;
+    right: 8px;
+  }
+
+  .editing-badge {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .editing-save-button,
+  .editing-cancel-button {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+
+  .offline-banner {
+    top: 100px;
+    font-size: 11px;
+  }
 }
