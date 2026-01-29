@@ -54,10 +54,11 @@
 }
 
 /* Mobile Responsive - Move to top left, below zone list */
+/* Use safe-area-inset-bottom so controls sit above Android nav bar */
 @media (max-width: 768px) {
   .drawing-controls {
     top: auto;
-    bottom: 20px;
+    bottom: calc(20px + env(safe-area-inset-bottom, 48px));
     left: 10px;
     flex-direction: row;
     flex-wrap: wrap;
@@ -78,7 +79,7 @@
 /* Small mobile screens */
 @media (max-width: 380px) {
   .drawing-controls {
-    bottom: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 48px));
     left: 8px;
     gap: 4px;
     max-width: calc(100% - 90px);

@@ -25,13 +25,6 @@ export function DrawingControls({
       {!isDrawing ? (
         <>
           <button
-            className={`drawing-button ${isDarkMode ? 'dark' : ''}`}
-            onClick={onStartDrawing}
-            type="button"
-            title="Draw Zone">
-            ✏️ Draw Zone
-          </button>
-          <button
             className={`drawing-button danger ${isDarkMode ? 'dark' : ''}`}
             onClick={onClearAll}
             type="button"
@@ -51,6 +44,13 @@ export function DrawingControls({
             type="button"
             title="Export Zones">
             💾 Export
+          </button>
+          <button
+            className={`drawing-button ${isDarkMode ? 'dark' : ''}`}
+            onClick={onStartDrawing}
+            type="button"
+            title="Draw Zone">
+            ✏️ Draw Zone
           </button>
         </>
       ) : (
